@@ -1,34 +1,38 @@
-const inputName = document.getElementById('input-name')
+const url = new URL('https://rickandmortyapi.com/api/character')
+
+const form = document.getElementById('searchUser')
+const query = document.getElementById('query')
 const characterImg = document.getElementById('character-img') 
 const characterName = document.getElementById('character-name')
 const characterType = document.getElementById('character-type')
-const formInput = document.getElementById('form-input')
 
-formInput.addEventListener('submit', async(e) => {
+form.addEventListener('submit', async (e) => {
     e.preventDefault()
+    
+    const name = query.value.trim()
+    if(!name) return
 
-    const name = inputName.value.trim()
-    if (!name) return
-
+    url.searchParams.set('name', name)
+     
     try {
-        const url = `https://rickandmortyapi.com/api/character?name=${name}`
         const response = await fetch(url)
+        
+        if(!response.ok){
+            throw new Error(`Request failed : ${response.status}`)
+        }
+        
         const data = await response.json()
-
-        if (!data.results){
-            throw new Error(`${name} not found`)
-        }   
-
-        const character = data.results[0]
+        const character = data.results[0]   
+        
         characterImg.src = character.image
         characterName.textContent = character.name
         characterType.textContent = character.species
-        inputName.placeholder = character.name
-        
+        query.placeholder = character.name
+
     } catch (error) {
-        window.alert(`[ERROR] -> ${error.message}`)
+        window.alert(`[ ERROR -> ${error.message} ]`)
     } finally {
-        inputName.value = ''
-        inputName.focus()
-    }
+        query.value = ''
+        query.focus()
+    }  
 })
