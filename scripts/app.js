@@ -2,9 +2,11 @@ const inputName = document.getElementById('input-name')
 const characterImg = document.getElementById('character-img') 
 const characterName = document.getElementById('character-name')
 const characterType = document.getElementById('character-type')
-const btnFind = document.getElementById('btn-find')
+const formInput = document.getElementById('form-input')
 
-btnFind.addEventListener('click', async() => {
+formInput.addEventListener('submit', async(e) => {
+    e.preventDefault()
+
     const name = inputName.value.trim()
     if (!name) return
 
@@ -21,10 +23,12 @@ btnFind.addEventListener('click', async() => {
         characterImg.src = character.image
         characterName.textContent = character.name
         characterType.textContent = character.species
+        inputName.placeholder = character.name
         
     } catch (error) {
         window.alert(`[ERROR] -> ${error.message}`)
     } finally {
         inputName.value = ''
+        inputName.focus()
     }
 })
